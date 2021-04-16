@@ -2,24 +2,18 @@ package com.example.bussearch.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.drawable.ColorDrawable;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
@@ -28,8 +22,6 @@ import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.example.bussearch.R;
 
 import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
     protected AutoCompleteTextView from, to;
@@ -46,6 +38,15 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
 
+        mSearchBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent plans = new Intent(MainActivity.this,PlansActivity.class);
+                plans.putExtra("start", fromKey);
+                plans.putExtra("end", toKey);
+                startActivity(plans);
+            }
+        });
     }
 
     //初始化界面

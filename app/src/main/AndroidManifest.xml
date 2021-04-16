@@ -13,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!-- 百度地图api密钥 -->
+        <activity android:name=".activity.MapActivity"></activity>
+        <activity android:name=".activity.RoutesActivity" />
+        <activity android:name=".activity.PlansActivity" /> <!-- 百度地图api密钥 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="vrhKnl0e6t0HfzUSS3iY3CShwCEErQ24" />

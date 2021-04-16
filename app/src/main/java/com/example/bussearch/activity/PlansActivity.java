@@ -1,0 +1,87 @@
+package com.example.bussearch.activity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+
+import com.baidu.mapapi.search.route.BikingRouteResult;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.IndoorRouteResult;
+import com.baidu.mapapi.search.route.MassTransitRouteResult;
+import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
+import com.baidu.mapapi.search.route.PlanNode;
+import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRouteLine;
+import com.baidu.mapapi.search.route.TransitRoutePlanOption;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRouteResult;
+import com.example.bussearch.R;
+import com.example.bussearch.overlayutil.TransitRouteOverlay;
+
+import java.util.ArrayList;
+
+public class PlansActivity extends AppCompatActivity {
+
+    private RoutePlanSearch mSearch;
+    private String start,end;
+    private OnGetRoutePlanResultListener mListener;
+    private ArrayList<TransitRouteLine> mRouteList = new ArrayList<>();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_plans);
+        Intent plans = getIntent();
+        start = plans.getStringExtra("start");
+        end = plans.getStringExtra("end");
+        mSearch = RoutePlanSearch.newInstance();
+        mSearch.setOnGetRoutePlanResultListener(mListener);
+
+        searchRoutes();
+
+    }
+    private void searchRoutes() {
+        PlanNode stardNode = PlanNode.withCityNameAndPlaceName("重庆", start);
+        PlanNode endNode = PlanNode.withCityNameAndPlaceName("重庆", end);
+
+        mSearch.transitSearch((new TransitRoutePlanOption())
+        .from(stardNode)
+        .to(endNode)
+        .city("重庆"));
+
+        mListener = new OnGetRoutePlanResultListener() {
+            @Override
+            public void onGetWalkingRouteResult(WalkingRouteResult walkingRouteResult) {
+
+            }
+
+            @Override
+            public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
+                mRouteList.clear();
+                mRouteList.addAll(transitRouteResult.getRouteLines());
+
+            }
+
+            @Override
+            public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
+
+            }
+
+            @Override
+            public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
+
+            }
+
+            @Override
+            public void onGetIndoorRouteResult(IndoorRouteResult indoorRouteResult) {
+
+            }
+
+            @Override
+            public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
+
+            }
+        };
+    }
+}
