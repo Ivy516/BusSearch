@@ -1,9 +1,11 @@
 package com.example.bussearch.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.baidu.mapapi.search.route.BikingRouteResult;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
@@ -17,6 +19,7 @@ import com.baidu.mapapi.search.route.TransitRoutePlanOption;
 import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.example.bussearch.R;
+import com.example.bussearch.adapter.PlansAdapter;
 import com.example.bussearch.overlayutil.TransitRouteOverlay;
 
 import java.util.ArrayList;
@@ -27,19 +30,21 @@ public class PlansActivity extends AppCompatActivity {
     private String start,end;
     private OnGetRoutePlanResultListener mListener;
     private ArrayList<TransitRouteLine> mRouteList = new ArrayList<>();
+    private PlansAdapter mPlansAdapter;
+    private RecyclerView mRecyclerView;
+    public static final String TAG = "PlansActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plans);
+        mRecyclerView = findViewById(R.id.plans_recycler_view);
         Intent plans = getIntent();
         start = plans.getStringExtra("start");
         end = plans.getStringExtra("end");
         mSearch = RoutePlanSearch.newInstance();
-        mSearch.setOnGetRoutePlanResultListener(mListener);
-
         searchRoutes();
-
+        mSearch.setOnGetRoutePlanResultListener(mListener);
     }
     private void searchRoutes() {
         PlanNode stardNode = PlanNode.withCityNameAndPlaceName("重庆", start);
@@ -60,7 +65,14 @@ public class PlansActivity extends AppCompatActivity {
             public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
                 mRouteList.clear();
                 mRouteList.addAll(transitRouteResult.getRouteLines());
-
+                if (mPlansAdapter == null) {
+                    mPlansAdapter = new PlansAdapter(PlansActivity.this, mRouteList);
+                    mRecyclerView.setAdapter(mPlansAdapter);
+                } else {
+                    mPlansAdapter.notificationDataChanged(mRouteList);
+                }
+                Log.d(TAG, "onGetTransitRouteResult: RouteSize = " +
+                        transitRouteResult.getRouteLines().size());
             }
 
             @Override

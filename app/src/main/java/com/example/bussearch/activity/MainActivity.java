@@ -2,7 +2,6 @@ package com.example.bussearch.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
@@ -30,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     protected Button mSearchBt;
     private static String TAG = "MainActivity";
     private ArrayList<String> mDatas = new ArrayList<>();
+    private LocationClient mLocationClient = null;
+    private MyLocationListener mMyLocationListener = new MyLocationListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(plans);
             }
         });
+
+        mLocationClient = new LocationClient(getApplicationContext());
+        mLocationClient.registerLocationListener(mMyLocationListener);
+        LocationClientOption option = new LocationClientOption();
+        option.setIsNeedAddress(true);
+        option.setNeedNewVersionRgc(true);
+        mLocationClient.setLocOption(option);
+        mLocationClient.start();
     }
 
     //初始化界面
@@ -77,8 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String str = s.toString();
-
+                fromKey = s.toString();
             }
         });
 
@@ -114,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void toSuggestionSearch(String keyWord) {
+        mSuggestionSearch = SuggestionSearch.newInstance();
         mSuggestionSearch.setOnGetSuggestionResultListener(toListener);
         mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                 .keyword(keyWord)
@@ -176,5 +189,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mSuggestionSearch.destroy();
+    }
+
+    class MyLocationListener extends BDAbstractLocationListener{
+
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+            fromKey = bdLocation.getAddrStr();
+            Log.d(TAG, "onReceiveLocation: " +fromKey);
+        }
     }
 }
