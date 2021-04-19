@@ -46,9 +46,10 @@ public class MainActivity extends AppCompatActivity {
         mSearchBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent plans = new Intent(MainActivity.this,PlansActivity.class);
+                Intent plans = new Intent(MainActivity.this,MapActivity.class);
                 plans.putExtra("start", fromKey);
                 plans.putExtra("end", toKey);
+                Log.d(TAG, "onClick: fromKey = " +fromKey + "toKey = " + toKey);
                 startActivity(plans);
             }
         });

@@ -14,6 +14,7 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.Polyline;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.search.route.TransitRouteLine;
+import com.example.bussearch.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class TransitRouteOverlay extends OverlayManager {
                     .position(mRouteLine.getStarting().getLocation())
                             .icon(getStartMarker() != null ? getStartMarker() :
                                     BitmapDescriptorFactory
-                                            .fromAssetWithDpi("Icon_start.png")).zIndex(10));
+                                            .fromResource(R.drawable.icon_start)).zIndex(10));
         }
         if (mRouteLine.getTerminal() != null) {
             overlayOptionses
@@ -80,7 +81,7 @@ public class TransitRouteOverlay extends OverlayManager {
                             .position(mRouteLine.getTerminal().getLocation())
                                     .icon(getTerminalMarker() != null ? getTerminalMarker() :
                                             BitmapDescriptorFactory
-                                                    .fromAssetWithDpi("Icon_end.png"))
+                                                    .fromResource(R.drawable.icon_end))
                                                             .zIndex(10));
         }
         // polyline
@@ -110,11 +111,11 @@ public class TransitRouteOverlay extends OverlayManager {
     private BitmapDescriptor getIconForStep(TransitRouteLine.TransitStep step) {
         switch (step.getStepType()) {
             case BUSLINE:
-                return BitmapDescriptorFactory.fromAssetWithDpi("Icon_bus_station.png");
+                return BitmapDescriptorFactory.fromResource(R.drawable.icon_bus_station);
             case SUBWAY:
-                return BitmapDescriptorFactory.fromAssetWithDpi("Icon_subway_station.png");
+                return BitmapDescriptorFactory.fromResource(R.drawable.icon_subway_station);
             case WAKLING:
-                return BitmapDescriptorFactory.fromAssetWithDpi("Icon_walk_route.png");
+                return BitmapDescriptorFactory.fromResource(R.drawable.icon_walk_route);
             default:
                 return null;
         }

@@ -86,14 +86,14 @@ public class IndoorRouteOverlay extends OverlayManager {
                 if (step.getEntrace() != null) {
                     overlayList.add((new MarkerOptions()).position(step.getEntrace().getLocation())
                             .zIndex(10).anchor(0.5f, 0.5f).extraInfo(b)
-                            .icon(BitmapDescriptorFactory.fromAssetWithDpi("Icon_walk_route.png")));
+                            .icon(BitmapDescriptorFactory.fromAssetWithDpi("icon_walk_route.png")));
                 }
 
                 // 最后路段绘制出口点
                 if (mRouteLine.getAllStep().indexOf(step) == (mRouteLine.getAllStep().size() - 1)
                         && step.getExit() != null) {
                     overlayList.add((new MarkerOptions()).position(step.getExit().getLocation()).anchor(0.5f, 0.5f)
-                            .zIndex(10).icon(BitmapDescriptorFactory.fromAssetWithDpi("Icon_walk_route.png")));
+                            .zIndex(10).icon(BitmapDescriptorFactory.fromAssetWithDpi("icon_walk_route.png")));
 
                 }
             }
@@ -102,14 +102,14 @@ public class IndoorRouteOverlay extends OverlayManager {
         if (mRouteLine.getStarting() != null) {
             overlayList.add((new MarkerOptions()).position(mRouteLine.getStarting().getLocation())
                     .icon(getStartMarker() != null ? getStartMarker() :
-                            BitmapDescriptorFactory.fromAssetWithDpi("Icon_start.png"))
+                            BitmapDescriptorFactory.fromAssetWithDpi("icon_start.png"))
                     .zIndex(10));
         }
         // 添加终点terminal
         if (mRouteLine.getTerminal() != null) {
             overlayList.add((new MarkerOptions()).position(mRouteLine.getTerminal().getLocation())
                     .icon(getTerminalMarker() != null ? getTerminalMarker() :
-                            BitmapDescriptorFactory.fromAssetWithDpi("Icon_end.png"))
+                            BitmapDescriptorFactory.fromAssetWithDpi("icon_end.png"))
                     .zIndex(10));
         }
 
@@ -140,14 +140,14 @@ public class IndoorRouteOverlay extends OverlayManager {
 //    private BitmapDescriptor getIconForStep(IndoorRouteLine.TransitStep step) {
 //        switch (step.getVehileType()) {
 //            case ESTEP_WALK:
-//                return BitmapDescriptorFactory.fromAssetWithDpi("Icon_walk_route.png");
+//                return BitmapDescriptorFactory.fromAssetWithDpi("icon_walk_route.png");
 //            case ESTEP_TRAIN:
-//                return BitmapDescriptorFactory.fromAssetWithDpi("Icon_subway_station.png");
+//                return BitmapDescriptorFactory.fromAssetWithDpi("icon_subway_station.png");
 //            case ESTEP_DRIVING:
 //            case ESTEP_COACH:
 //            case ESTEP_PLANE:
 //            case ESTEP_BUS:
-//                return BitmapDescriptorFactory.fromAssetWithDpi("Icon_bus_station.png");
+//                return BitmapDescriptorFactory.fromAssetWithDpi("icon_bus_station.png");
 //            default:
 //                return null;
 //        }

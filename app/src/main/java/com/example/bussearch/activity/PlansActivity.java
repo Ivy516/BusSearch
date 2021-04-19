@@ -1,6 +1,7 @@
 package com.example.bussearch.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -42,9 +43,11 @@ public class PlansActivity extends AppCompatActivity {
         Intent plans = getIntent();
         start = plans.getStringExtra("start");
         end = plans.getStringExtra("end");
+        Log.d(TAG, "onCreate: start = " + start + ",end = " + end);
         mSearch = RoutePlanSearch.newInstance();
-        searchRoutes();
+        createListener();
         mSearch.setOnGetRoutePlanResultListener(mListener);
+        searchRoutes();
     }
     private void searchRoutes() {
         PlanNode stardNode = PlanNode.withCityNameAndPlaceName("重庆", start);
@@ -54,7 +57,9 @@ public class PlansActivity extends AppCompatActivity {
         .from(stardNode)
         .to(endNode)
         .city("重庆"));
+    }
 
+    private void createListener(){
         mListener = new OnGetRoutePlanResultListener() {
             @Override
             public void onGetWalkingRouteResult(WalkingRouteResult walkingRouteResult) {
@@ -63,12 +68,18 @@ public class PlansActivity extends AppCompatActivity {
 
             @Override
             public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
+                Log.d(TAG, "onGetTransitRouteResult: ");
                 mRouteList.clear();
+                if (transitRouteResult != null && transitRouteResult.getRouteLines() != null)
                 mRouteList.addAll(transitRouteResult.getRouteLines());
                 if (mPlansAdapter == null) {
+                    Log.d(TAG, "onGetTransitRouteResult: adapter");
+                    LinearLayoutManager manager = new LinearLayoutManager(PlansActivity.this);
+                    mRecyclerView.setLayoutManager(manager);
                     mPlansAdapter = new PlansAdapter(PlansActivity.this, mRouteList);
                     mRecyclerView.setAdapter(mPlansAdapter);
                 } else {
+                    Log.d(TAG, "onGetTransitRouteResult: notification");
                     mPlansAdapter.notificationDataChanged(mRouteList);
                 }
                 Log.d(TAG, "onGetTransitRouteResult: RouteSize = " +
@@ -95,5 +106,11 @@ public class PlansActivity extends AppCompatActivity {
 
             }
         };
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSearch.destroy();
     }
 }

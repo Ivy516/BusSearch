@@ -56,7 +56,7 @@ public class BusLineOverlay extends OverlayManager {
                             .zIndex(10)
                                     .anchor(0.5f, 0.5f)
                                             .icon(BitmapDescriptorFactory
-                                                    .fromAssetWithDpi("Icon_bus_station.png")));
+                                                    .fromAssetWithDpi("icon_bus_station.png")));
         }
 
         List<LatLng> points = new ArrayList<LatLng>();

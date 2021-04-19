@@ -179,7 +179,7 @@ public class MassTransitRouteOverlay extends OverlayManager {
         if (mRouteLine.getStarting() != null && mRouteLine.getStarting().getLocation() != null) {
             overlayOptionses.add((new MarkerOptions()).position(mRouteLine.getStarting().getLocation())
                     .icon(getStartMarker() != null
-                            ? getStartMarker() : BitmapDescriptorFactory.fromAssetWithDpi("Icon_start.png"))
+                            ? getStartMarker() : BitmapDescriptorFactory.fromAssetWithDpi("icon_start.png"))
                     .zIndex(10));
         }
         // 终点
@@ -189,7 +189,7 @@ public class MassTransitRouteOverlay extends OverlayManager {
                             .position(mRouteLine.getTerminal().getLocation())
                             .icon(getTerminalMarker() != null ? getTerminalMarker() :
                                     BitmapDescriptorFactory
-                                            .fromAssetWithDpi("Icon_end.png"))
+                                            .fromAssetWithDpi("icon_end.png"))
                             .zIndex(10));
         }
 
@@ -200,14 +200,14 @@ public class MassTransitRouteOverlay extends OverlayManager {
     private BitmapDescriptor getIconForStep(MassTransitRouteLine.TransitStep step) {
         switch (step.getVehileType()) {
             case ESTEP_WALK:
-                return BitmapDescriptorFactory.fromAssetWithDpi("Icon_walk_route.png");
+                return BitmapDescriptorFactory.fromAssetWithDpi("icon_walk_route.png");
             case ESTEP_TRAIN:
-                return BitmapDescriptorFactory.fromAssetWithDpi("Icon_subway_station.png");
+                return BitmapDescriptorFactory.fromAssetWithDpi("icon_subway_station.png");
             case ESTEP_DRIVING:
             case ESTEP_COACH:
             case ESTEP_PLANE:
             case ESTEP_BUS:
-                return BitmapDescriptorFactory.fromAssetWithDpi("Icon_bus_station.png");
+                return BitmapDescriptorFactory.fromAssetWithDpi("icon_bus_station.png");
             default:
                 return null;
         }
