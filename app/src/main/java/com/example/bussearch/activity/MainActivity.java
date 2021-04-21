@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         mSuggestionSearch.setOnGetSuggestionResultListener(fromListener);
         mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
         .keyword(keyWord)
-        .city("重庆"));
+        .city("北京"));
     }
 
     private void toSuggestionSearch(String keyWord) {
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         mSuggestionSearch.setOnGetSuggestionResultListener(toListener);
         mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                 .keyword(keyWord)
-                .city("重庆"));
+                .city("北京"));
     }
 
 

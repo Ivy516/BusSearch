@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.baidu.mapapi.search.route.BikingRouteResult;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
@@ -50,13 +51,13 @@ public class PlansActivity extends AppCompatActivity {
         searchRoutes();
     }
     private void searchRoutes() {
-        PlanNode stardNode = PlanNode.withCityNameAndPlaceName("重庆", start);
-        PlanNode endNode = PlanNode.withCityNameAndPlaceName("重庆", end);
+        PlanNode stardNode = PlanNode.withCityNameAndPlaceName("北京", start);
+        PlanNode endNode = PlanNode.withCityNameAndPlaceName("北京", end);
 
         mSearch.transitSearch((new TransitRoutePlanOption())
         .from(stardNode)
         .to(endNode)
-        .city("重庆"));
+        .city("北京"));
     }
 
     private void createListener(){
@@ -70,8 +71,9 @@ public class PlansActivity extends AppCompatActivity {
             public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
                 Log.d(TAG, "onGetTransitRouteResult: ");
                 mRouteList.clear();
-                if (transitRouteResult != null && transitRouteResult.getRouteLines() != null)
-                mRouteList.addAll(transitRouteResult.getRouteLines());
+                if (transitRouteResult != null && transitRouteResult.getRouteLines() != null) {
+                    mRouteList.addAll(transitRouteResult.getRouteLines());
+                }
                 if (mPlansAdapter == null) {
                     Log.d(TAG, "onGetTransitRouteResult: adapter");
                     LinearLayoutManager manager = new LinearLayoutManager(PlansActivity.this);

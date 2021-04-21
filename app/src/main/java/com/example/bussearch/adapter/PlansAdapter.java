@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> {
-    private List<TransitRouteLine> lines = new ArrayList<>();
+    private List<TransitRouteLine> lines;
     private Context mContext;
 
     public PlansAdapter(Context context, List<TransitRouteLine> routeLines) {
@@ -39,7 +39,8 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.title.setText("方案");
+        holder.title.setText("方案" + (position+1));
+        holder.fromTo.setText(lines.get(position).getTitle());
     }
 
 
