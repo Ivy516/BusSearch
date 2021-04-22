@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.baidu.mapapi.search.route.TransitRouteLine;
 import com.example.bussearch.R;
-import com.example.bussearch.activity.MapActivity;
-import com.example.bussearch.activity.RoutesActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> {
@@ -31,7 +28,7 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.activity_plans, parent, false);
+                inflate(R.layout.item_plans, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
 
         return viewHolder;
@@ -39,8 +36,11 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        TransitRouteLine line = lines.get(position);
         holder.title.setText("方案" + (position+1));
-        holder.fromTo.setText(lines.get(position).getTitle());
+        holder.fromTo.setText(line.toString());
+        holder.meter.setText("距离：" + line.getDistance()/1000 +
+                "公里  时间：" + line.getDuration()/60 + "分钟");
     }
 
 
@@ -49,15 +49,6 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
         return lines.size();
     }
 
-    public void notificationDataChanged(List<TransitRouteLine> routeLines) {
-        if (lines.size() == 0 || lines==null) {
-            lines = routeLines;
-        } else {
-            lines.clear();
-            lines.addAll(routeLines);
-        }
-        notifyDataSetChanged();
-    }
 
      class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView title,meter,fromTo;
@@ -72,7 +63,7 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
         @Override
         public void onClick(View v) {
             int k = getAdapterPosition();
-            MapActivity.actionStart(mContext, lines.get(k));
+            //MapActivity.actionStart(mContext, lines.get(k));
             //RoutesActivity.startRoutesActivity(mContext, lines.get(k));
         }
     }

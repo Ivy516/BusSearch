@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -18,14 +19,29 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.search.route.BikingRouteResult;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.IndoorRouteResult;
+import com.baidu.mapapi.search.route.MassTransitRouteResult;
+import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
+import com.baidu.mapapi.search.route.PlanNode;
+import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRouteLine;
+import com.baidu.mapapi.search.route.TransitRoutePlanOption;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.example.bussearch.R;
 
+import java.io.Serializable;
+import java.security.PrivateKey;
 import java.util.ArrayList;
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     protected AutoCompleteTextView from, to;
     protected SuggestionSearch mSuggestionSearch;
@@ -34,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private static String TAG = "MainActivity";
     private ArrayList<String> mDatas = new ArrayList<>();
     private LocationClient mLocationClient = null;
+    private RoutePlanSearch mRoutePlanSearch;
+    private List<TransitRouteLine> mRouteList = new ArrayList<>();
+    private OnGetRoutePlanResultListener mRouteLineListener;
+    private Bundle bundle;
     private MyLocationListener mMyLocationListener = new MyLocationListener();
 
     @Override
@@ -41,18 +61,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initView();
+        mRoutePlanSearch = RoutePlanSearch.newInstance();
 
-        mSearchBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent plans = new Intent(MainActivity.this,MapActivity.class);
-                plans.putExtra("start", fromKey);
-                plans.putExtra("end", toKey);
-                Log.d(TAG, "onClick: fromKey = " +fromKey + "toKey = " + toKey);
-                startActivity(plans);
-            }
-        });
+        initView();
 
         mLocationClient = new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(mMyLocationListener);
@@ -61,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         option.setNeedNewVersionRgc(true);
         mLocationClient.setLocOption(option);
         mLocationClient.start();
+
+        mSearchBt.setOnClickListener(this);
     }
 
     //初始化界面
@@ -190,6 +203,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mSuggestionSearch.destroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.bt_search) {
+            Intent plans = new Intent(MainActivity.this,PlansActivity.class);
+            plans.putExtra("start", fromKey);
+            plans.putExtra("end", toKey);
+            Log.d(TAG, "onClick: fromKey = " +fromKey + "toKey = " + toKey);
+            startActivity(plans);
+        }
     }
 
     class MyLocationListener extends BDAbstractLocationListener{
