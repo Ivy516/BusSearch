@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.baidu.mapapi.search.route.TransitRouteLine;
 import com.example.bussearch.R;
+import com.example.bussearch.activity.MapActivity;
+import com.example.bussearch.activity.RoutesActivity;
 
 import java.util.List;
 
@@ -63,8 +65,8 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
         @Override
         public void onClick(View v) {
             int k = getAdapterPosition();
-            //MapActivity.actionStart(mContext, lines.get(k));
-            //RoutesActivity.startRoutesActivity(mContext, lines.get(k));
+            MapActivity.actionStart(mContext, lines.get(k));
+            RoutesActivity.startRoutesActivity(mContext, lines.get(k));
         }
     }
 }

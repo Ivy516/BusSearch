@@ -32,7 +32,6 @@ public class PlansActivity extends AppCompatActivity {
     private RoutePlanSearch mSearch;
     private String start,end;
     private OnGetRoutePlanResultListener mListener;
-    private  ArrayList<Test> tests = new ArrayList<>();
     private ArrayList<TransitRouteLine> mRouteList = new ArrayList<>();
     private PlansAdapter mPlansAdapter;
     private RecyclerView mRecyclerView;
@@ -43,12 +42,11 @@ public class PlansActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plans);
         mRecyclerView = findViewById(R.id.plans_recycler_view);
-        initData();
 
         Intent plans = getIntent();
         start = plans.getStringExtra("start");
         end = plans.getStringExtra("end");
-        Log.d(TAG, "onCreate: start = " + start + ",end = " + end);
+        Log.d(TAG, "onCreate: start = " + start + " ,end = " + end);
         mSearch = RoutePlanSearch.newInstance();
         createListener();
         mSearch.setOnGetRoutePlanResultListener(mListener);
@@ -64,19 +62,6 @@ public class PlansActivity extends AppCompatActivity {
         .city("北京"));
     }
 
-    private void initData() {
-        for (int i = 0; i < 10; i++) {
-            Test t = new Test("标题","from——to","ooo");
-            tests.add(t);
-        }
-    }
-    private void initDatas() {
-        for (int i = 0; i < 10; i++) {
-            Test t = new Test("aaaa","bbbb","cccc");
-            tests.add(t);
-        }
-    }
-
     private void createListener(){
         mListener = new OnGetRoutePlanResultListener() {
             @Override
@@ -87,7 +72,6 @@ public class PlansActivity extends AppCompatActivity {
             @Override
             public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
                 mRouteList.clear();
-                tests.clear();
                 if (transitRouteResult != null && transitRouteResult.getRouteLines() != null) {
                     mRouteList.addAll(transitRouteResult.getRouteLines());
                     LinearLayoutManager manager = new LinearLayoutManager(PlansActivity.this);
