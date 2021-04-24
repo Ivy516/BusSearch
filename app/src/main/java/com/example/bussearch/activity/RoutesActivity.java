@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 
 import com.baidu.mapapi.search.route.TransitRouteLine;
 import com.example.bussearch.R;
@@ -16,6 +17,7 @@ public class RoutesActivity extends AppCompatActivity {
     static TransitRouteLine mLine;
     private ArrayList<String> lines = new ArrayList<>();
     private RouteView mBusLineView;
+    private int index =0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,9 @@ public class RoutesActivity extends AppCompatActivity {
 
         initData();
         mBusLineView = findViewById(R.id.bus_line);
+        mBusLineView.setBusDataList(lines);
     }
+
 
     private void initData() {
         for (int i = 0; i < 6; i++) {
@@ -38,6 +42,10 @@ public class RoutesActivity extends AppCompatActivity {
         Intent intent = new Intent(startContext, RoutesActivity.class);
         intent.putExtra("line", line);
         startContext.startActivity(intent);
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

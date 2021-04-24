@@ -10,6 +10,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.example.bussearch.R;
+
 import java.util.ArrayList;
 
 public class RouteView extends View {
@@ -17,6 +19,7 @@ public class RouteView extends View {
     private Paint mLinePaint;
     private Context mContext;
     private ArrayList<String> mBusLines;
+
     //蓝色线段颜色
     private int mLineColor = Color.rgb(30,144,255);
     private int mWalkCircle = Color.rgb(230,230,250);
@@ -30,6 +33,8 @@ public class RouteView extends View {
     public RouteView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
+        mBusLines = new ArrayList<>();
+
     }
 
     public RouteView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -46,10 +51,10 @@ public class RouteView extends View {
         mLinePaint.setStyle(Paint.Style.STROKE);
 
         float circlePointDistance = 0;//圆心之间的距离
-        float initLine = 15;//进度条的长度
+        float initLine = 20;//进度条的长度
         //进度条X，y坐标
-        float progressCenterX = 50;
-        float progressCenterY = 20;
+        float progressCenterX = 100;
+        float progressCenterY = 30;
         float baseInterval = 100;
         float circlePointY = 0;//圆心Y坐标
         float radius = 20;
@@ -69,14 +74,14 @@ public class RouteView extends View {
                 Path path = new Path();
                 path.moveTo(progressCenterX,circlePointY+radius);
                 path.lineTo(progressCenterX,
-                        initLine + circlePointDistance - radius);
+                        initLine + progressCenterY+circlePointDistance - radius);
                 canvas.drawPath(path, mLinePaint);
 
                 //画圆
                 Paint mPaintCircle = new Paint();
                 mPaintCircle.setStyle(Paint.Style.STROKE);
                 mPaintCircle.setStrokeWidth(5);
-                mPaintCircle.setColor(Color.WHITE);
+                mPaintCircle.setColor(Color.BLACK);
                 circlePointY = initLine + progressCenterY + circlePointDistance;
                 canvas.drawCircle(progressCenterX,circlePointY, radius, mPaintCircle);
 
@@ -85,7 +90,7 @@ public class RouteView extends View {
                 String text = mBusLines.get(i);
                 float textdx = 80;
                 Paint mPainText = new Paint();
-                mPainText.setTextSize(30);
+                mPainText.setTextSize(50);
                 mPainText.setColor(Color.BLACK);
                 Paint.FontMetrics fontMetrics = mPainText.getFontMetrics();
                 float dy = (fontMetrics.descent - fontMetrics.ascent) /2
@@ -93,7 +98,23 @@ public class RouteView extends View {
                 canvas.drawText(text, progressCenterX+textdx,circlePointY+dy,
                         mPainText);
 
+                circlePointDistance += baseInterval+ radius;
+
             }
         }
+    }
+
+    public void setBusData(String busData) {
+        if (busData == null) {
+            mBusLines.add(busData);
+        }
+        invalidate();
+    }
+
+    public void setBusDataList(ArrayList<String> busDataList) {
+        if (busDataList != null && busDataList.size()>0) {
+            mBusLines = busDataList;
+        }
+        invalidate();
     }
 }

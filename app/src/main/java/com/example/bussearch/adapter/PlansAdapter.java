@@ -33,6 +33,15 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
                 inflate(R.layout.item_plans, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
 
+//        viewHolder.title.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int k = viewHolder.getAdapterPosition();
+//                TransitRouteLine line = lines.get(k);
+//                RoutesActivity.startRoutesActivity(mContext, line);
+//            }
+//        });
+
         return viewHolder;
     }
 
@@ -60,13 +69,14 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
             title = itemView.findViewById(R.id.tv_title);
             meter = itemView.findViewById(R.id.tv_meter);
             fromTo = itemView.findViewById(R.id.tv_from_to);
+            itemView.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
-            int k = getAdapterPosition();
-            MapActivity.actionStart(mContext, lines.get(k));
-            RoutesActivity.startRoutesActivity(mContext, lines.get(k));
-        }
-    }
+         @Override
+         public void onClick(View v) {
+             int k = getAdapterPosition();
+             TransitRouteLine line = lines.get(k);
+             RoutesActivity.startRoutesActivity(mContext, line);
+         }
+     }
 }
