@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
@@ -19,6 +21,7 @@ public class RouteView extends View {
     private Paint mLinePaint;
     private Context mContext;
     private ArrayList<String> mBusLines;
+    public static final String TAG = "RouteView";
 
     //蓝色线段颜色
     private int mLineColor = Color.rgb(30,144,255);
@@ -42,22 +45,35 @@ public class RouteView extends View {
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+
+        if (heightMode == MeasureSpec.UNSPECIFIED) {
+            setMeasuredDimension(widthSize, 2*heightSize);
+        }
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mLinePaint = new Paint();
-        mLinePaint.setColor(mLineColor);
         mLinePaint.setAntiAlias(true);
-        mLinePaint.setStrokeWidth(8);
+        mLinePaint.setStrokeWidth(10);
         mLinePaint.setStyle(Paint.Style.STROKE);
 
         float circlePointDistance = 0;//圆心之间的距离
         float initLine = 20;//进度条的长度
         //进度条X，y坐标
         float progressCenterX = 100;
-        float progressCenterY = 30;
-        float baseInterval = 100;
+        float progressCenterY = 20;
+        float baseInterval = 80;
         float circlePointY = 0;//圆心Y坐标
         float radius = 20;
+        float walkRadius = 15;
+        float distance = 0;
 
         if (mBusLines == null || mBusLines.size() == 0) {
             return;
@@ -65,24 +81,31 @@ public class RouteView extends View {
 
         for (int i = 0; i < mBusLines.size(); i++) {
             String address = mBusLines.get(i);
+            Log.d(TAG, "onDraw: " + address);
             if (address == null) {
                 break;
             }
 
             //画线
-            if (i>0) {
-                Path path = new Path();
-                path.moveTo(progressCenterX,circlePointY+radius);
-                path.lineTo(progressCenterX,
-                        initLine + progressCenterY+circlePointDistance - radius);
-                canvas.drawPath(path, mLinePaint);
+            if (i>=0) {
+                if (i == 3) {
+                    distance = 80;
+                    mLinePaint.setColor(Color.GREEN);
+                } else {
+                    mLinePaint.setColor(mLineColor);
+                }
+                    Path path = new Path();
+                    path.moveTo(progressCenterX,circlePointY + radius);
+                    path.lineTo(progressCenterX,
+                            initLine + progressCenterY + circlePointDistance - radius + distance);
+                    canvas.drawPath(path, mLinePaint);
 
                 //画圆
                 Paint mPaintCircle = new Paint();
                 mPaintCircle.setStyle(Paint.Style.STROKE);
                 mPaintCircle.setStrokeWidth(5);
                 mPaintCircle.setColor(Color.BLACK);
-                circlePointY = initLine + progressCenterY + circlePointDistance;
+                circlePointY = initLine + progressCenterY + circlePointDistance+distance;
                 canvas.drawCircle(progressCenterX,circlePointY, radius, mPaintCircle);
 
 
@@ -98,7 +121,7 @@ public class RouteView extends View {
                 canvas.drawText(text, progressCenterX+textdx,circlePointY+dy,
                         mPainText);
 
-                circlePointDistance += baseInterval+ radius;
+                circlePointDistance +=  baseInterval+radius;
 
             }
         }

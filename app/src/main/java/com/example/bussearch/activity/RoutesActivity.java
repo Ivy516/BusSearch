@@ -26,6 +26,7 @@ public class RoutesActivity extends AppCompatActivity {
 
         mLine = getIntent().getParcelableExtra("line");
 
+
         initData();
         mBusLineView = findViewById(R.id.bus_line);
         mBusLineView.setBusDataList(lines);
@@ -33,7 +34,7 @@ public class RoutesActivity extends AppCompatActivity {
 
 
     private void initData() {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 10; i++) {
             lines.add("站点" + i);
         }
     }
