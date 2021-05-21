@@ -4,12 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MapActivity">
-
-    <com.baidu.mapapi.map.MapView
-        android:id="@+id/bai_du_map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"/>
+    tools:context=".activity.WalkActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,11 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.TextView;
 
-import com.baidu.location.BDAbstractLocationListener;
-import com.baidu.location.BDLocation;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
 import com.baidu.mapapi.search.route.RoutePlanSearch;
 import com.baidu.mapapi.search.route.TransitRouteLine;
@@ -37,15 +34,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected SuggestionSearch mSuggestionSearch;
     protected String fromKey,toKey;
     protected Button mSearchBt;
+    protected TextView mLogin;
     private static String TAG = "MainActivity";
     private ArrayList<String> mDatas = new ArrayList<>();
-    private LocationClient mLocationClient = null;
     private RoutePlanSearch mRoutePlanSearch;
     private List<TransitRouteLine> mRouteList = new ArrayList<>();
-    private OnGetRoutePlanResultListener mRouteLineListener;
-    private Bundle bundle;
-    private MyLocationListener mMyLocationListener = new MyLocationListener();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,15 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initView();
 
-        mLocationClient = new LocationClient(getApplicationContext());
-        mLocationClient.registerLocationListener(mMyLocationListener);
-        LocationClientOption option = new LocationClientOption();
-        option.setIsNeedAddress(true);
-        option.setNeedNewVersionRgc(true);
-        mLocationClient.setLocOption(option);
-        mLocationClient.start();
-
         mSearchBt.setOnClickListener(this);
+        mLogin.setOnClickListener(this);
     }
 
     //初始化界面
@@ -71,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         from = findViewById(R.id.et_from);
         to = findViewById(R.id.et_to);
         mSearchBt = findViewById(R.id.bt_search);
+        mLogin = findViewById(R.id.user_login);
 
         from.setDropDownHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         from.setDropDownWidth(1500);
@@ -126,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSuggestionSearch.setOnGetSuggestionResultListener(fromListener);
         mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
         .keyword(keyWord)
-        .city("北京"));
+        .city("重庆"));
     }
 
     private void toSuggestionSearch(String keyWord) {
@@ -134,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSuggestionSearch.setOnGetSuggestionResultListener(toListener);
         mSuggestionSearch.requestSuggestion((new SuggestionSearchOption())
                 .keyword(keyWord)
-                .city("北京"));
+                .city("重庆"));
     }
 
 
@@ -197,21 +184,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.bt_search) {
-            Intent plans = new Intent(MainActivity.this,PlansActivity.class);
-            plans.putExtra("start", fromKey);
-            plans.putExtra("end", toKey);
-            Log.d(TAG, "onClick: fromKey = " +fromKey + "toKey = " + toKey);
-            startActivity(plans);
-        }
-    }
-
-    class MyLocationListener extends BDAbstractLocationListener{
-
-        @Override
-        public void onReceiveLocation(BDLocation bdLocation) {
-            fromKey = bdLocation.getAddrStr();
-            Log.d(TAG, "onReceiveLocation: " +fromKey);
+        switch (v.getId()) {
+            case R.id.bt_search:
+                Intent plans = new Intent(MainActivity.this,PlansActivity.class);
+                plans.putExtra("start", fromKey);
+                plans.putExtra("end", toKey);
+                Log.d(TAG, "onClick: fromKey = " +fromKey + "toKey = " + toKey);
+                startActivity(plans);
+            break;
+            case R.id.user_login:
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
         }
     }
 }

@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_background"
-    tools:context=".activity.MainActivity">
+    tools:context=".activity.LoginActivity">
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="重庆公交查询系统"
+        android:text="登录"
         android:textSize="90px"
         android:textStyle="italic"
         android:textColor="@color/black"
@@ -22,7 +22,7 @@
         app:layout_constraintVertical_bias="0.3" />
 
     <LinearLayout
-        android:id="@+id/layout_from"
+        android:id="@+id/layout_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -33,86 +33,76 @@
         >
 
         <TextView
-            android:id="@+id/tv_from"
+            android:id="@+id/tv_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="起点："
+            android:text="账号："
             android:textSize="70px"
             android:textStyle="bold"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"/>
 
         <AutoCompleteTextView
-            android:id="@+id/et_from"
+            android:id="@+id/et_user_name"
             android:layout_width="200dp"
             android:layout_height="30dp"
             android:gravity="center"
             android:completionThreshold="1"
             android:inputType="text"
             android:maxLines="1"
-            android:hint="我的位置"
+            android:hint="请输入账号"
             android:layout_gravity="center_vertical"
             android:background="@drawable/edit"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layout_to"
+        android:id="@+id/layout_user_pass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_from"
+        app:layout_constraintTop_toBottomOf="@id/layout_user_name"
         app:layout_constraintVertical_bias="0">
 
         <TextView
-            android:id="@+id/tv_to"
+            android:id="@+id/tv_user_pass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="终点："
+            android:text="密码："
             android:textSize="70px"
             android:textStyle="bold"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"/>
 
         <AutoCompleteTextView
-            android:id="@+id/et_to"
+            android:id="@+id/et_user_pass"
             android:layout_width="200dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/edit"
             android:completionThreshold="1"
             android:gravity="center"
+            android:hint="请输入密码"
             android:inputType="text"
             android:maxLines="1" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/bt_search"
+        android:id="@+id/bt_login"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="搜索"
+        android:text="登录"
         android:background="@drawable/edit"
         android:textSize="50px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_to"
+        app:layout_constraintTop_toBottomOf="@id/layout_user_pass"
         app:layout_constraintVertical_bias="0.1"/>
 
-    <TextView
-        android:id="@+id/user_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="管理员登录"
-        android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bt_search"
-        app:layout_constraintVertical_bias="0.19" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

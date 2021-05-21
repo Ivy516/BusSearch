@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.baidu.mapapi.search.route.TransitRouteLine;
 import com.example.bussearch.R;
-import com.example.bussearch.activity.MapActivity;
 import com.example.bussearch.activity.RoutesActivity;
 
 import java.util.List;
@@ -33,25 +32,29 @@ public class PlansAdapter extends RecyclerView.Adapter<PlansAdapter.ViewHolder> 
                 inflate(R.layout.item_plans, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
 
-//        viewHolder.title.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int k = viewHolder.getAdapterPosition();
-//                TransitRouteLine line = lines.get(k);
-//                RoutesActivity.startRoutesActivity(mContext, line);
-//            }
-//        });
-
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TransitRouteLine line = lines.get(position);
-        holder.title.setText("方案" + (position+1));
-        holder.fromTo.setText(line.toString());
+        TransitRouteLine.TransitStep busStep = getBusStep(line);
+
+        holder.title.setText(busStep.getVehicleInfo().getTitle());
+
+        holder.fromTo.setText(busStep.getEntrance().getTitle() + "——" + busStep.getExit().getTitle());
         holder.meter.setText("距离：" + line.getDistance()/1000 +
                 "公里  时间：" + line.getDuration()/60 + "分钟");
+    }
+
+    public TransitRouteLine.TransitStep getBusStep(TransitRouteLine line) {
+        for (int i = 0; i < line.getAllStep().size(); i++) {
+            if (line.getAllStep().get(i).getStepType()
+            == TransitRouteLine.TransitStep.TransitRouteStepType.BUSLINE) {
+                return line.getAllStep().get(i);
+            }
+        }
+        return null;
     }
 
 

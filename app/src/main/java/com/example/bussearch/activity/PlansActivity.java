@@ -26,6 +26,7 @@ import com.example.bussearch.overlayutil.TransitRouteOverlay;
 
 import java.util.ArrayList;
 
+//路线规划方案选择页面
 public class PlansActivity extends AppCompatActivity {
 
     private RoutePlanSearch mSearch;
@@ -52,13 +53,13 @@ public class PlansActivity extends AppCompatActivity {
         searchRoutes();
     }
     private void searchRoutes() {
-        PlanNode stardNode = PlanNode.withCityNameAndPlaceName("北京", start);
-        PlanNode endNode = PlanNode.withCityNameAndPlaceName("北京", end);
+        PlanNode stardNode = PlanNode.withCityNameAndPlaceName("重庆", start);
+        PlanNode endNode = PlanNode.withCityNameAndPlaceName("重庆", end);
 
         mSearch.transitSearch((new TransitRoutePlanOption())
         .from(stardNode)
         .to(endNode)
-        .city("北京"));
+        .city("重庆"));
     }
 
     private void createListener(){

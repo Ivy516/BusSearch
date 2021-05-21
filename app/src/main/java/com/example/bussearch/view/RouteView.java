@@ -5,23 +5,35 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.Nullable;
 
-import com.example.bussearch.R;
+import com.baidu.mapapi.search.route.TransitRouteLine;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RouteView extends View {
 
+     public interface OnItemSelectListener{
+         public void onItemSelect(TransitRouteLine.TransitStep transitStep);
+     }
+
     private Paint mLinePaint;
     private Context mContext;
-    private ArrayList<String> mBusLines;
+    private List<TransitRouteLine.TransitStep> mTransitSteps;
+    private ArrayList<Rect> mRects = new ArrayList<>();
     public static final String TAG = "RouteView";
+    private String mWalk = "步行导航";
+    private OnItemSelectListener listener;
+    private int index=0;
 
     //蓝色线段颜色
     private int mLineColor = Color.rgb(30,144,255);
@@ -36,12 +48,15 @@ public class RouteView extends View {
     public RouteView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        mBusLines = new ArrayList<>();
-
+        mTransitSteps = new ArrayList<>();
     }
 
     public RouteView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setOnItemSelectListener(OnItemSelectListener listener){
+        this.listener = listener;
     }
 
     @Override
@@ -52,7 +67,7 @@ public class RouteView extends View {
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 
         if (heightMode == MeasureSpec.UNSPECIFIED) {
-            setMeasuredDimension(widthSize, 2*heightSize);
+            setMeasuredDimension(widthSize, heightSize);
         }
     }
 
@@ -67,32 +82,38 @@ public class RouteView extends View {
         float circlePointDistance = 0;//圆心之间的距离
         float initLine = 20;//进度条的长度
         //进度条X，y坐标
-        float progressCenterX = 100;
+        float progressCenterX = 200;
         float progressCenterY = 20;
-        float baseInterval = 80;
+        float baseInterval = 200;
         float circlePointY = 0;//圆心Y坐标
         float radius = 20;
-        float walkRadius = 15;
         float distance = 0;
+        String text;
 
-        if (mBusLines == null || mBusLines.size() == 0) {
+        if (mTransitSteps == null || mTransitSteps.size() == 0) {
             return;
         }
 
-        for (int i = 0; i < mBusLines.size(); i++) {
-            String address = mBusLines.get(i);
-            Log.d(TAG, "onDraw: " + address);
-            if (address == null) {
+        mRects.clear();
+        for (int i = 0; i < mTransitSteps.size(); i++) {
+            TransitRouteLine.TransitStep step = mTransitSteps.get(i);
+            if (step == null) {
                 break;
             }
 
             //画线
             if (i>=0) {
-                if (i == 3) {
-                    distance = 80;
+                //distance = distance+80;
+                if (step.getStepType() == TransitRouteLine.TransitStep.TransitRouteStepType.WAKLING) {
+                    //distance = distance+80;
+                    text = "步行导航";
                     mLinePaint.setColor(Color.GREEN);
                 } else {
+                    text = "公交详情";
                     mLinePaint.setColor(mLineColor);
+                }
+                if (i == mTransitSteps.size()-1) {
+                    text = "目的地";
                 }
                     Path path = new Path();
                     path.moveTo(progressCenterX,circlePointY + radius);
@@ -100,43 +121,80 @@ public class RouteView extends View {
                             initLine + progressCenterY + circlePointDistance - radius + distance);
                     canvas.drawPath(path, mLinePaint);
 
+
                 //画圆
                 Paint mPaintCircle = new Paint();
                 mPaintCircle.setStyle(Paint.Style.STROKE);
                 mPaintCircle.setStrokeWidth(5);
                 mPaintCircle.setColor(Color.BLACK);
-                circlePointY = initLine + progressCenterY + circlePointDistance+distance;
+                circlePointY = initLine + progressCenterY + circlePointDistance + distance;
                 canvas.drawCircle(progressCenterX,circlePointY, radius, mPaintCircle);
 
 
                 //画文字
-                String text = mBusLines.get(i);
                 float textdx = 80;
                 Paint mPainText = new Paint();
                 mPainText.setTextSize(50);
-                mPainText.setColor(Color.BLACK);
+                mPainText.setColor(Color.BLUE);
                 Paint.FontMetrics fontMetrics = mPainText.getFontMetrics();
                 float dy = (fontMetrics.descent - fontMetrics.ascent) /2
                         - fontMetrics.descent;
                 canvas.drawText(text, progressCenterX+textdx,circlePointY+dy,
                         mPainText);
 
+                Rect rect = new Rect();
+                rect.left = (int)(progressCenterX+textdx);
+                rect.right = (int)(progressCenterX+textdx+mPainText.measureText(mWalk));
+                rect.top = (int)(circlePointY+dy-fontMetrics.top);
+                rect.bottom = (int)(circlePointY+dy+fontMetrics.bottom-2*fontMetrics.top+150);
+                mRects.add(rect);
+
                 circlePointDistance +=  baseInterval+radius;
 
             }
         }
+        mRects.remove(mTransitSteps.size()-1);
     }
 
-    public void setBusData(String busData) {
-        if (busData == null) {
-            mBusLines.add(busData);
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //Log.d(TAG, "onTouchEvent: " + event.getAction() + " index = " + index);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                float x = event.getRawX();
+                float y = event.getRawY();
+                Log.d(TAG, "onTouchEvent: x = " + x + " y = " + y);
+                Log.d(TAG, "onTouchEvent: isTouch = " + isTouch(x,y));
+                if (isTouch(x,y)&&listener != null) {
+                    listener.onItemSelect(mTransitSteps.get(index));
+                }
+                return true;
+            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_UP:
+                index = -1;
+                return true;
         }
-        invalidate();
+        return super.onTouchEvent(event);
     }
 
-    public void setBusDataList(ArrayList<String> busDataList) {
-        if (busDataList != null && busDataList.size()>0) {
-            mBusLines = busDataList;
+    public boolean isTouch(float x , float y) {
+        Log.d(TAG, "isTouch: rectSize = " + mRects.size());
+        for (int i = 0; i < mRects.size(); i++) {
+            Log.d(TAG, "isTouch: left = " + mRects.get(i).left
+         + " right = " + mRects.get(i).right
+            + " top = " + mRects.get(i).top
+          + " bottom = " + mRects.get(i).bottom);
+            if (mRects.get(i).contains((int)x,(int)y)) {
+                index = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setBusDataList(List<TransitRouteLine.TransitStep> transitSteps) {
+        if (transitSteps != null && transitSteps.size()>0) {
+            mTransitSteps = transitSteps;
         }
         invalidate();
     }

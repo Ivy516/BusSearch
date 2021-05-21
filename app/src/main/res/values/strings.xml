@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">BusSearch</string>
+    <string name="line_test">新力村->文峰公社->吉祥路口->南山路->中研所->
+        邮电大学->黄桷垭->崇文路口->上新街站->龙门浩->轨道上新街站->小什字小商品市场->临江门->较场口</string>
+
+    <string-array name="choose">
+        <item>发车时间</item>
+        <item>收车时间</item>
+        <item>票价</item>
+        <item>全程距离</item>
+        <item>名字</item>
+    </string-array>
+
 </resources>
