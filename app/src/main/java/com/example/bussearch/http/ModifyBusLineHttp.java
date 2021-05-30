@@ -14,24 +14,29 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ModifyBusLineHttp {
-    private int position;
-    private String name;
+    private static int position;
+    private static String name,busName;
     private String url;
     private static ModifyBusLineHttp mModifyBusLineHttp;
     public static final String TAG = "ModifyBusLineHttp";
-    private ModifyBusLineHttp(String url, int position, String name) {
+    private ModifyBusLineHttp(String url, int position, String name, String busName) {
         this.url = url;
         this.position = position;
         this.name = name;
+        this.busName = busName;
     }
 
     public interface Callback{
         void response(String data);
     }
 
-    public static ModifyBusLineHttp getInstance(String url, int position, String name) {
+    public static ModifyBusLineHttp getInstance(String url, int position, String name, String busName) {
         if (mModifyBusLineHttp == null) {
-            mModifyBusLineHttp = new ModifyBusLineHttp(url, position, name);
+            mModifyBusLineHttp = new ModifyBusLineHttp(url, position, name, busName);
+        } else {
+            ModifyBusLineHttp.position = position;
+            ModifyBusLineHttp.name = name;
+            ModifyBusLineHttp.busName = busName;
         }
         return mModifyBusLineHttp;
     }
@@ -42,6 +47,7 @@ public class ModifyBusLineHttp {
         RequestBody requestBody = new FormBody.Builder()
                 .add("position", String.valueOf(position))
                 .add("name", name)
+                .add("busName", busName)
                 .build();
 
         final Request request = new Request.Builder()
@@ -58,7 +64,7 @@ public class ModifyBusLineHttp {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (callback != null) {
-                    callback.response(response.body().toString());
+                    callback.response(response.body().string());
                 }
             }
         });

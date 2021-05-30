@@ -49,7 +49,7 @@ public class DeleteLineHttp {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (callback != null) {
-                    callback.response(response.body().toString());
+                    callback.response(response.body().string());
                 }
             }
         });

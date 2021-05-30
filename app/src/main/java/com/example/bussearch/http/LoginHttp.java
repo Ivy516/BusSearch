@@ -54,8 +54,9 @@ public class LoginHttp {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                Log.d(TAG, "onResponse: " + callback);
                 if (callback != null) {
-                    callback.response(response.body().toString());
+                    callback.response(response.body().string());
                 }
             }
         });

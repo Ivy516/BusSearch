@@ -33,6 +33,7 @@ public class BNaviGuideActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: BNaviGuideActivity");
         mNaviHelper.resume();
     }
 

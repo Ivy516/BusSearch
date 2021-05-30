@@ -35,6 +35,7 @@ public class WNaviGuideActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: WNaviGuideActivity");
         mNaviHelper.resume();
     }
 
@@ -68,6 +69,7 @@ public class WNaviGuideActivity extends Activity {
 
             @Override
             public void onNaviExit() {
+                finish();
                 Log.d(TAG, "onNaviExit");
             }
         });

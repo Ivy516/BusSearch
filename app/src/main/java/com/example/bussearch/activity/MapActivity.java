@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.search.route.BikingRouteResult;
 import com.baidu.mapapi.search.route.DrivingRouteResult;
 import com.baidu.mapapi.search.route.IndoorRouteResult;
@@ -21,45 +24,54 @@ import com.baidu.mapapi.search.route.TransitRouteResult;
 import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.example.bussearch.R;
 import com.example.bussearch.adapter.PlansAdapter;
-import com.example.bussearch.data.Test;
 import com.example.bussearch.overlayutil.TransitRouteOverlay;
 
 import java.util.ArrayList;
 
-//路线规划方案选择页面
-public class PlansActivity extends AppCompatActivity {
+public class MapActivity extends AppCompatActivity {
 
+    private MapView mBaiduMapView;
+    private BaiduMap mBaiduMap;
+    private TransitRouteLine mLine;
     private RoutePlanSearch mSearch;
     private String start,end;
     private OnGetRoutePlanResultListener mListener;
     private ArrayList<TransitRouteLine> mRouteList = new ArrayList<>();
-    private PlansAdapter mPlansAdapter;
-    private RecyclerView mRecyclerView;
     public static final String TAG = "PlansActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_plans);
-        mRecyclerView = findViewById(R.id.plans_recycler_view);
+        setContentView(R.layout.activity_map);
+        mLine = getIntent().getParcelableExtra("line");
 
-        Intent plans = getIntent();
-        start = plans.getStringExtra("start");
-        end = plans.getStringExtra("end");
-        Log.d(TAG, "onCreate: start = " + start + " ,end = " + end);
-        mSearch = RoutePlanSearch.newInstance();
-        createListener();
-        mSearch.setOnGetRoutePlanResultListener(mListener);
-        searchRoutes();
+        mBaiduMapView = findViewById(R.id.bai_du_map);
+        mBaiduMap = mBaiduMapView.getMap();
+
+        //TransitRouteOverlay overlay = new TransitRouteOverlay(mBaiduMap);
+        //overlay.setData(mLine);
+        //在地图上绘制TransitRouteOverlay
+//        overlay.addToMap();
+//        overlay.zoomToSpan();
+
+//        Intent plans = getIntent();
+//        start = plans.getStringExtra("start");
+//        end = plans.getStringExtra("end");
+//        Log.d(TAG, "onCreate: start = " + start + " ,end = " + end);
+//        mSearch = RoutePlanSearch.newInstance();
+        //createListener();
+//        mSearch.setOnGetRoutePlanResultListener(mListener);
+        //searchRoutes();
     }
+
     private void searchRoutes() {
         PlanNode stardNode = PlanNode.withCityNameAndPlaceName("重庆", start);
         PlanNode endNode = PlanNode.withCityNameAndPlaceName("重庆", end);
 
         mSearch.transitSearch((new TransitRoutePlanOption())
-        .from(stardNode)
-        .to(endNode)
-        .city("重庆"));
+                .from(stardNode)
+                .to(endNode)
+                .city("重庆"));
     }
 
     private void createListener(){
@@ -73,12 +85,13 @@ public class PlansActivity extends AppCompatActivity {
             public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
                 mRouteList.clear();
                 if (transitRouteResult != null && transitRouteResult.getRouteLines() != null) {
-                    //MapActivity.actionStart(getApplication(),transitRouteResult.getRouteLines().get(0));
-                    mRouteList.addAll(transitRouteResult.getRouteLines());
-                    LinearLayoutManager manager = new LinearLayoutManager(PlansActivity.this);
-                    mRecyclerView.setLayoutManager(manager);
-                    mPlansAdapter = new PlansAdapter(PlansActivity.this, mRouteList);
-                    mRecyclerView.setAdapter(mPlansAdapter);
+//                    TransitRouteOverlay overlay = new TransitRouteOverlay(mBaiduMap);
+//                    if (transitRouteResult.getRouteLines().size() > 0) {
+//                        overlay.setData(transitRouteResult.getRouteLines().get(1));
+//                        //在地图上绘制TransitRouteOverlay
+//                        overlay.addToMap();
+//                        //overlay.zoomToSpan();
+//                    }
                 }
                 Log.d(TAG, "onGetTransitRouteResult: RouteSize = " +
                         transitRouteResult.getRouteLines().size());
@@ -106,9 +119,29 @@ public class PlansActivity extends AppCompatActivity {
         };
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mBaiduMapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mBaiduMapView.onPause();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSearch.destroy();
+        //mSearch.destroy();
+        mBaiduMapView.onDestroy();
+    }
+
+    public static void actionStart(Context context, TransitRouteLine line) {
+        Intent intent = new Intent(context, MapActivity.class);
+        intent.putExtra("line", line);
+        context.startActivity(intent);
     }
 }

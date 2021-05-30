@@ -24,4 +24,10 @@ public class WalkActivity extends Activity {
         }
         mWalkNavigateHelper.startWalkNavi(WalkActivity.this);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: WalkActivity");
+    }
 }

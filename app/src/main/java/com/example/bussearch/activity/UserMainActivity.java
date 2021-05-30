@@ -1,41 +1,41 @@
 package com.example.bussearch.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.bussearch.R;
-import com.example.bussearch.data.BusLineBean;
 import com.example.bussearch.http.DeleteLineHttp;
 import com.example.bussearch.http.GetBusLinesHttp;
 import com.example.bussearch.http.ModifyBusHttp;
 import com.example.bussearch.http.ModifyBusLineHttp;
-import com.example.bussearch.view.RouteView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserMainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private SearchView mSearchView;
     private TextView mBusLineView,mShowBus;
-    private EditText position,stop,spanners,deleteBus;
+    private EditText position,stop,spanners,deleteBus,mBus;
     private Spinner mSpinner;
-    private Button mDelete,mModifyBusData,mModifyStop;
+    private Button mDelete,mModifyBusData,mModifyStop,mAdd;
     private StringBuilder str;
-    private String name,value;
+    private String name,value,bus;
+    private mHandler handler = new mHandler();
     public static final String TAG = "UserMainActivity";
 
     @Override
@@ -48,6 +48,8 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
         initSpanner();
         addListener();
     }
+
+
 
     protected void initSpanner() {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -69,6 +71,7 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
         mDelete.setOnClickListener(this);
         mModifyBusData.setOnClickListener(this);
         mModifyStop.setOnClickListener(this);
+        mAdd.setOnClickListener(this);
     }
 
     protected void initView() {
@@ -83,6 +86,8 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
         mModifyBusData = findViewById(R.id.modify);
         mModifyStop = findViewById(R.id.modify_stop);
         mSpinner = findViewById(R.id.choose);
+        mBus = findViewById(R.id.et_bus);
+        mAdd = findViewById(R.id.add);
     }
 
     protected void initSearch() {
@@ -98,9 +103,14 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
                     getBusLinesHttp.sendHttp(new GetBusLinesHttp.callBack() {
                         @Override
                         public void response(String data) {
-                            String lines = showBusLines(data);
-                            mShowBus.setText(query);
-                            mBusLineView.setText(lines);
+                           final String lines = showBusLines(data);
+                           UserMainActivity.this.runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+                                   mShowBus.setText(query);
+                                   mBusLineView.setText(lines);
+                               }
+                           });
                         }
                     });
                     return true;
@@ -128,6 +138,7 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
         }catch (Exception e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "showBusLines: " + str.toString());
         return str.toString();
     }
 
@@ -135,7 +146,7 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         String url;
         switch (v.getId()) {
-            case R.id.choose:
+            case R.id.modify:
                 url = "http://39.96.15.89:8080/modifyBusData";
                     if (name.equals("发车时间")) {
                         name = "startTime";
@@ -149,40 +160,76 @@ public class UserMainActivity extends AppCompatActivity implements View.OnClickL
                         name = "name";
                     }
                     value = spanners.getText().toString();
-                ModifyBusHttp modifyBusHttp = ModifyBusHttp.getInstance(url, name, value);
+                    bus = mBus.getText().toString();
+                Log.d(TAG, "onClick: name = " + name + " value = " + value + " busName = " + bus);
+                ModifyBusHttp modifyBusHttp = ModifyBusHttp.getInstance(url, name, value,bus);
                 modifyBusHttp.sendHttp(new ModifyBusHttp.callBack() {
                     @Override
                     public void response(String data) {
-                        spanners.setText("");
+                        UserMainActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                spanners.setText("");
+                            }
+                        });
                     }
                 });
                 break;
             case R.id.modify_stop:
                 int index = Integer.valueOf(position.getText().toString());
                 String stops = stop.getText().toString();
+                bus = mBus.getText().toString();
                 url = "http://39.96.15.89:8080/modifyBusLine";
-                ModifyBusLineHttp modifyBusLineHttp = ModifyBusLineHttp.getInstance(url, index, stops);
+                ModifyBusLineHttp modifyBusLineHttp = ModifyBusLineHttp.getInstance(url, index, stops,bus);
                 modifyBusLineHttp.sendHttp(new ModifyBusLineHttp.Callback() {
                     @Override
                     public void response(String data) {
-                        position.setText("");
-                        stop.setText("");
+                        Message message = handler.obtainMessage();
+                        message.what = 2;
+                        handler.sendMessage(message);
                     }
                 });
                 break;
             case R.id.bt_delete:
                 final String busName = deleteBus.getText().toString();
-                url = "http://39.96.15.89:8080/" + busName;
+                url = "http://39.96.15.89:8080/deleteLine?busName=" + busName;
                 DeleteLineHttp deleteLineHttp = DeleteLineHttp.getInstance(url);
                 deleteLineHttp.sendHttp(new DeleteLineHttp.Callback() {
                     @Override
                     public void response(String data) {
-                        deleteBus.setText("");
+                        Message message = handler.obtainMessage();
+                        message.what = 3;
+                        handler.sendMessage(message);
                     }
                 });
                 break;
+            case R.id.add:
+                Intent intent = new Intent(UserMainActivity.this, AddBusDataActivity.class);
+                startActivity(intent);
+                break;
             default:
                 break;
+        }
+    }
+
+    class mHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    spanners.setText("");
+                    mBus.setText("");
+                    break;
+                case 2:
+                    position.setText("");
+                    stop.setText("");
+                    break;
+                case 3:
+                    deleteBus.setText("");
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

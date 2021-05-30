@@ -18,24 +18,52 @@
         android:id="@+id/tv_bus_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="346"
         android:textSize="60px"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/tv_line"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.09"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search"
-        app:layout_constraintVertical_bias="0.38" />
+        app:layout_constraintVertical_bias="0.01999998" />
 
 
     <TextView
         android:id="@+id/tv_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/choose"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_bus_name"
-        app:layout_constraintVertical_bias="0.04000002" />
+        app:layout_constraintVertical_bias="0.01999998" />
+
+    <TextView
+        android:id="@+id/bus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="进行操作的公交："
+        android:textColor="@color/black"
+        android:textSize="50px"
+        app:layout_constraintEnd_toEndOf="@+id/tv_line"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/tv_line"
+        app:layout_constraintTop_toBottomOf="@+id/tv_line" />
+
+    <EditText
+        android:id="@+id/et_bus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="50px"
+        app:layout_constraintBottom_toBottomOf="@+id/bus"
+        app:layout_constraintEnd_toEndOf="@+id/tv_line"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/bus"
+        app:layout_constraintTop_toTopOf="@+id/bus" />
 
     <Spinner
         android:id="@+id/choose"
@@ -46,14 +74,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.03"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_line"
-        app:layout_constraintVertical_bias="0.06999999" />
+        app:layout_constraintTop_toBottomOf="@+id/bus"
+        app:layout_constraintVertical_bias="0.07999998" />
 
     <EditText
         android:id="@+id/edit"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="8:00"
         app:layout_constraintBottom_toBottomOf="@+id/choose"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.04"
@@ -89,7 +116,6 @@
         android:id="@+id/et_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1"
         app:layout_constraintBottom_toBottomOf="@+id/position"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.04"
@@ -113,7 +139,6 @@
         android:id="@+id/et_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="沙坪坝"
         app:layout_constraintBottom_toBottomOf="@+id/tv_stop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.07"
@@ -148,7 +173,6 @@
         android:id="@+id/et_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="346"
         app:layout_constraintBottom_toBottomOf="@+id/delete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.03"
@@ -165,6 +189,17 @@
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toEndOf="@+id/et_delete"
         app:layout_constraintTop_toTopOf="@+id/et_delete" />
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="增加公交信息"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/delete"
+        app:layout_constraintVertical_bias="0.19" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

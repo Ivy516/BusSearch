@@ -1,5 +1,6 @@
 package com.example.bussearch.overlayutil;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,9 @@ import com.baidu.mapapi.map.Polyline;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.search.route.TransitRouteLine;
 import com.example.bussearch.R;
+import com.example.bussearch.activity.BNaviMainActivity;
+import com.example.bussearch.activity.BusLineActivity;
+import com.example.bussearch.activity.RoutesActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +36,10 @@ public class TransitRouteOverlay extends OverlayManager {
      * @param baiduMap
      *            该TransitRouteOverlay引用的 BaiduMap 对象
      */
-    public TransitRouteOverlay(BaiduMap baiduMap) {
-        super(baiduMap);
+    public TransitRouteOverlay(BaiduMap baiduMap,Context context) {
+        super(baiduMap,context);
     }
+
 
     @Override
     public final List<OverlayOptions> getOverlayOptions() {
@@ -164,7 +169,14 @@ public class TransitRouteOverlay extends OverlayManager {
     public boolean onRouteNodeClick(int i) {
         if (mRouteLine.getAllStep() != null
                 && mRouteLine.getAllStep().get(i) != null) {
-            Log.i("baidumapsdk", "TransitRouteOverlay onRouteNodeClick");
+            TransitRouteLine.TransitStep step = mRouteLine.getAllStep().get(i);
+            if (step.getStepType() == TransitRouteLine.TransitStep.TransitRouteStepType.BUSLINE) {
+                    BusLineActivity.actionStart(mContext, step);
+                } else if (step.getStepType() ==
+                    TransitRouteLine.TransitStep.TransitRouteStepType.WAKLING) {
+                    BNaviMainActivity.actionStart(mContext, step);
+                }
+            return true;
         }
         return false;
     }

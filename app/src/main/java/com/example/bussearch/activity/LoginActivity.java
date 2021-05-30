@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +22,8 @@ public class LoginActivity extends AppCompatActivity {
     protected Button mLogin;
     private String mUser,mPass;
     private LoginHttp mLoginHttp;
-    private String loginUrl = "http://localhost:8080/login";
+    private String loginUrl = "http://39.96.15.89:8080/login";
+    public static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +45,10 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this,UserMainActivity.class);
                             startActivity(intent);
                         } else {
+                            Looper.prepare();
                             Toast.makeText(LoginActivity.this, "请检查账号和密码是否正确",
                                     Toast.LENGTH_LONG).show();
+                            Looper.loop();
                         }
 
                     }
@@ -54,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public String showData(String data) {
+        Log.d(TAG, "showData: " + data);
         String status = null;
         try {
             JSONObject jsonObject = new JSONObject(data);

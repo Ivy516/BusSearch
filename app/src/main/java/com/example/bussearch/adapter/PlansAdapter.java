@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.baidu.mapapi.search.route.TransitRouteLine;
 import com.example.bussearch.R;
+import com.example.bussearch.activity.MainActivity;
+import com.example.bussearch.activity.MapActivity;
 import com.example.bussearch.activity.RoutesActivity;
 
 import java.util.List;

@@ -39,7 +39,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-public class BNaviMainActivity extends AppCompatActivity {
+public class BNaviMainActivity extends Activity {
 
     private final static String TAG = "BNaviMainActivity";
 
@@ -110,12 +110,6 @@ public class BNaviMainActivity extends AppCompatActivity {
 //            }
 //        });
 
-//        BikeRouteNodeInfo bikeStartNode = new BikeRouteNodeInfo();
-//        bikeStartNode.setLocation(startPt);
-//        BikeRouteNodeInfo bikeEndNode = new BikeRouteNodeInfo();
-//        bikeEndNode.setLocation(endPt);
-//        bikeParam = new BikeNaviLaunchParam().startNodeInfo(bikeStartNode).endNodeInfo(bikeEndNode);
-
         WalkRouteNodeInfo walkStartNode = new WalkRouteNodeInfo();
         walkStartNode.setLocation(startPt);
         WalkRouteNodeInfo walkEndNode = new WalkRouteNodeInfo();
@@ -167,13 +161,6 @@ public class BNaviMainActivity extends AppCompatActivity {
                 }else if(marker == mEndMarker){
                     endPt = marker.getPosition();
                 }
-
-
-//                BikeRouteNodeInfo bikeStartNode = new BikeRouteNodeInfo();
-//                bikeStartNode.setLocation(startPt);
-//                BikeRouteNodeInfo bikeEndNode = new BikeRouteNodeInfo();
-//                bikeEndNode.setLocation(endPt);
-//                bikeParam = new BikeNaviLaunchParam().startNodeInfo(bikeStartNode).endNodeInfo(bikeEndNode);
 
                 WalkRouteNodeInfo walkStartNode = new WalkRouteNodeInfo();
                 walkStartNode.setLocation(startPt);
@@ -337,6 +324,9 @@ public class BNaviMainActivity extends AppCompatActivity {
         }
     }
 
+    public static void finshs() {
+
+    }
     protected void onPause() {
         super.onPause();
         mMapView.onPause();
@@ -344,6 +334,7 @@ public class BNaviMainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "onResume: BNaviMainActivity");
         super.onResume();
         mMapView.onResume();
     }

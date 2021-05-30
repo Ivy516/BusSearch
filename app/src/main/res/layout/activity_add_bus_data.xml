@@ -7,6 +7,15 @@
     android:orientation="vertical"
     tools:context=".activity.AddBusDataActivity">
 
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="增加公交信息"
+        android:textSize="70px"
+        android:textColor="@color/black"/>
+
     <LinearLayout
         android:id="@+id/layout_name"
         android:layout_width="match_parent"
@@ -24,9 +33,10 @@
 
         <EditText
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:text="123"
+            android:gravity="center_horizontal"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="347"
             android:layout_marginLeft="30dp"/>
     </LinearLayout>
     <LinearLayout
@@ -44,9 +54,10 @@
             android:layout_marginLeft="30dp"/>
         <EditText
             android:id="@+id/et_start_time"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="7:00"
+            android:gravity="center_horizontal"
             android:layout_marginLeft="30dp"/>
 
     </LinearLayout>
@@ -68,8 +79,9 @@
 
         <EditText
             android:id="@+id/et_end_time"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:text="10:00"
             android:layout_marginLeft="30dp"/>
     </LinearLayout>
@@ -91,9 +103,10 @@
 
         <EditText
             android:id="@+id/et_price"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="2"
+            android:gravity="center_horizontal"
             android:layout_marginLeft="30dp"/>
     </LinearLayout>
 
@@ -114,12 +127,68 @@
 
         <EditText
             android:id="@+id/et_distance"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="3公里"
+            android:gravity="center_horizontal"
+            android:text="3"
             android:layout_marginLeft="30dp"/>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/bt_add"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="确定"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/tv_add_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="增加路线"
+        android:textSize="70px"
+        android:textColor="@color/black"
+        android:layout_margin="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="公交名称:"
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="50px"/>
+
+        <EditText
+            android:id="@+id/et_add_line"
+            android:layout_width="100dp"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/bt_add_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="增加"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="上传"/>
+
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/layout_line"
         android:layout_width="match_parent"
@@ -130,23 +199,11 @@
             android:id="@+id/tv_lines"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="路线："
             android:textColor="@color/black"
             android:textSize="50px"
-            android:layout_marginLeft="30dp"/>
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"/>
 
-        <EditText
-            android:id="@+id/et_line"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="邮电大学，崇文路，上新街"
-            android:layout_marginLeft="30dp"/>
     </LinearLayout>
-    <Button
-        android:id="@+id/bt_add"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="增加"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center_horizontal"/>
+
 </LinearLayout>

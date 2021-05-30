@@ -35,19 +35,18 @@ public class BusLineActivity extends AppCompatActivity {
         step = getIntent().getParcelableExtra("step");
         String busName = step.getVehicleInfo().getTitle();
         Log.d(TAG, "onCreate: " + busName);
+
+        mBusLineView = findViewById(R.id.bus_line);
         url = url+busName;
         GetBusLinesHttp getBusLinesHttp = GetBusLinesHttp.getInstance(url);
         getBusLinesHttp.sendHttp(new GetBusLinesHttp.callBack() {
             @Override
             public void response(String data) {
+                Log.d(TAG, "response: " + data);
                 showData(data);
+                mBusLineView.setBusStops(mBusLineBeans);
             }
         });
-
-        mBusLineView = findViewById(R.id.bus_line);
-        //initData();
-        mBusLineView.setBusStops(mBusLineBeans);
-
     }
 
     private void showData(String data) {
@@ -56,9 +55,17 @@ public class BusLineActivity extends AppCompatActivity {
             JSONArray jsonArray = jsonObject.getJSONArray("data");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                Log.d(TAG, "showData: " + jsonObject1.getInt("position")+" " +
+                        jsonObject1.getString("stop") + " " +
+                        (jsonObject1.getInt("isArrived") == 1 ? true : false)
+                + jsonObject1.getString("latitude") + jsonObject1.getString("longitude"));
+
                 mBusLineBeans.add(new BusLineBean(jsonObject1.getInt("position")
-                ,jsonObject1.getString("stop"),
-                        jsonObject1.getInt("isArrived") == 1 ? true : false));
+                                ,jsonObject1.getString("stop"),
+                        (jsonObject1.getInt("isArrived") == 1 ? true : false),
+                        jsonObject1.getDouble("latitude"),
+                        jsonObject1.getDouble("longitude")
+                        ));
             }
         }catch (Exception e) {
             e.printStackTrace();
@@ -66,23 +73,23 @@ public class BusLineActivity extends AppCompatActivity {
     }
 
     public void initData() {
-        mBusLineBeans.add(new BusLineBean(1,"新力村",false));
-        mBusLineBeans.add(new BusLineBean(2,"文峰公社",false));
-        mBusLineBeans.add(new BusLineBean(3,"吉祥路口",false));
-        mBusLineBeans.add(new BusLineBean(4,"南山路",true));
-        mBusLineBeans.add(new BusLineBean(5,"中研所",false));
-        mBusLineBeans.add(new BusLineBean(6,"邮电大学",false));
-        mBusLineBeans.add(new BusLineBean(7,"黄桷垭",false));
-        mBusLineBeans.add(new BusLineBean(8,"崇文路口",true));
-        mBusLineBeans.add(new BusLineBean(9,"上新街站",false));
-        mBusLineBeans.add(new BusLineBean(10,"龙门浩",false));
-        mBusLineBeans.add(new BusLineBean(11,"轨道上新街站",true));
-        mBusLineBeans.add(new BusLineBean(12,"小什字小商品市场",false));
-        mBusLineBeans.add(new BusLineBean(13,"临江门",false));
-        mBusLineBeans.add(new BusLineBean(14,"较场口",false));
+//        mBusLineBeans.add(new BusLineBean(1,"新力村",false),0,0);
+//        mBusLineBeans.add(new BusLineBean(2,"文峰公社",false));
+//        mBusLineBeans.add(new BusLineBean(3,"吉祥路口",false));
+//        mBusLineBeans.add(new BusLineBean(4,"南山路",true));
+//        mBusLineBeans.add(new BusLineBean(5,"中研所",false));
+//        mBusLineBeans.add(new BusLineBean(6,"邮电大学",false));
+//        mBusLineBeans.add(new BusLineBean(7,"黄桷垭",false));
+//        mBusLineBeans.add(new BusLineBean(8,"崇文路口",true));
+//        mBusLineBeans.add(new BusLineBean(9,"上新街站",false));
+//        mBusLineBeans.add(new BusLineBean(10,"龙门浩",false));
+//        mBusLineBeans.add(new BusLineBean(11,"轨道上新街站",true));
+//        mBusLineBeans.add(new BusLineBean(12,"小什字小商品市场",false));
+//        mBusLineBeans.add(new BusLineBean(13,"临江门",false));
+//        mBusLineBeans.add(new BusLineBean(14,"较场口",false));
     }
 
-    public static void actionStart(Context context, TransitRouteLine.TransitStep step) {
+    public static void actionStart(Context context , TransitRouteLine.TransitStep step) {
         Intent intent = new Intent(context, BusLineActivity.class);
         intent.putExtra("step",step);
         context.startActivity(intent);

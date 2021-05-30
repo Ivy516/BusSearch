@@ -1,5 +1,7 @@
 package com.example.bussearch.overlayutil;
 
+import android.content.Context;
+
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnPolylineClickListener;
 import com.baidu.mapapi.map.MapStatus;
@@ -30,6 +32,7 @@ import static com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 public abstract class OverlayManager implements OnMarkerClickListener, OnPolylineClickListener {
 
     BaiduMap mBaiduMap = null;
+    Context mContext;
     private List<OverlayOptions> mOverlayOptionList = null;
 
     List<Overlay> mOverlayList = null;
@@ -41,13 +44,18 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
      */
     public OverlayManager(BaiduMap baiduMap) {
         mBaiduMap = baiduMap;
-        // mBaiduMap.setOnMarkerClickListener(this);
+        mBaiduMap.setOnMarkerClickListener(this);
         if (mOverlayOptionList == null) {
             mOverlayOptionList = new ArrayList<OverlayOptions>();
         }
         if (mOverlayList == null) {
             mOverlayList = new ArrayList<Overlay>();
         }
+    }
+
+    public OverlayManager(BaiduMap mBaiduMap, Context mContext) {
+       this(mBaiduMap);
+       this.mContext = mContext;
     }
 
     /**
@@ -74,6 +82,7 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
         for (OverlayOptions option : mOverlayOptionList) {
             mOverlayList.add(mBaiduMap.addOverlay(option));
         }
+        zoomToSpan();
     }
 
     /**
